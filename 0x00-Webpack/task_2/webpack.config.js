@@ -21,6 +21,19 @@ module.exports = {
           'css-loader'
         ],
       },
+      {
+        test: /\.(ico|gif|png|jpg|jpeg|svg)$/i,
+        use: [
+            'file-loader',
+          {
+            loader: 'image-webpack-loader',
+            options: {
+							bypassOnDebug: true,
+							disable: true,
+						},
+          },
+        ],
+      },
     ],
   },
 };
