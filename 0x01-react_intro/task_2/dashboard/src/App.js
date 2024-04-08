@@ -14,9 +14,9 @@ function App() {
 
       <div className='App-body'>
         <p>Login to acceess the full dashboard</p>
-        <label>Email</label>
+        <label>Email: </label>
         <input></input>
-        <label>Password</label>
+        <label>Password: </label>
         <input type='text'/>
         <button>OK</button>
       </div>
