@@ -11,7 +11,24 @@ import Proptypes from 'prop-types';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.handleLogOut = this.handleLogOut.bind(this);
   }
+
+  handleLogOut(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'h') {
+      alert('Logging you out');
+      this.logOut;
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleLogOut);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleLogOut);
+  }
+
   render() {
     const listCourses = [
       {id: 1, name: 'ES6', credit: 60},
@@ -23,15 +40,15 @@ class App extends React.Component {
       { id: 2, type: 'urgent', value: 'New resume available' },
       { id: 3, type: 'urgent', html: getLatestNotification() }
     ];
-    const {isLoggedIn} = this.props;
+    const {isLoggedIn, logOut} = this.props;
     return (
       <>
       <div className="root-notifications">
-        <Notifications listNotifications={this.listNotifications}/>
+        <Notifications listNotifications={listNotifications}/>
       </div>
       <div className='App'>
         <Header />
-        {isLoggedIn ? <CourseList listCourses={this.listCourses} /> : <Login />}
+        {isLoggedIn ? <CourseList listCourses={listCourses} /> : <Login />}
         <Footer />
       </div>
     </>
@@ -40,11 +57,13 @@ class App extends React.Component {
 }
 
 App.proptypes = {
-  isLoggedIn: Proptypes.bool
+  isLoggedIn: Proptypes.bool,
+  logOut: Proptypes.func
 };
 
 App.defaultProps = {
-  isLoggedIn: false
+  isLoggedIn: false,
+  logOut: () => {return;}
 };
 
 export default App;
