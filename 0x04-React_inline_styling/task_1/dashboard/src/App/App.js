@@ -1,5 +1,6 @@
 import React from 'react';
-import './App.css'
+import Proptypes from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
 import Header from '../Header/Header';
 import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
@@ -8,8 +9,6 @@ import CourseList from '../CourseList/CourseList';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 import BodySection from '../BodySection/BodySection';
 import { getLatestNotification } from '../utils/utils';
-import Proptypes from 'prop-types';
-import {StyleSheet, css} from 'aphrodite';
 
 class App extends React.Component {
   constructor(props) {
@@ -46,11 +45,11 @@ class App extends React.Component {
     const {isLoggedIn, logOut} = this.props;
     return (
       <>
-      <div className="root-notifications">
-        <Notifications listNotifications={listNotifications}/>
-      </div>
-      <div className='App'>
-        <Header />
+      <div className={css(styles.App)}>
+        <div className="HeaderSection">
+          <Notifications listNotifications={listNotifications}/>
+          <Header />
+        </div>
         {isLoggedIn ?
         (
           <BodySectionWithMarginBottom title='CourseList'>
@@ -78,8 +77,20 @@ App.proptypes = {
 };
 
 App.defaultProps = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   logOut: () => {return;}
 };
+
+// Styles
+const styles = StyleSheet.create({
+  App: {
+    position: "relative",
+    height: "100vh",
+    maxwidth: "100%",
+    fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+    boxSizing: "content-box",
+    margin: 0
+  }
+});
 
 export default App;
