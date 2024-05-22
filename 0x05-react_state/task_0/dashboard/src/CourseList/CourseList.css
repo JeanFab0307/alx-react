@@ -1,0 +1,15 @@
+table, thead, tbody, tr, th, td {
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 1rem;
+  width: 50%;
+  margin: 0 auto;
+  border: solid 1px grey;
+}
+table {
+  margin: 20px auto;
+}
+thead {
+  font-weight: bold;
+  text-align: center;
+}
