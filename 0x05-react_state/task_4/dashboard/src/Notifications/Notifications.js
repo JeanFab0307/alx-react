@@ -5,24 +5,13 @@ import closeIcon from '../assets/close-icon.png';
 import NotificationItem from './NotificationItem.js'
 import NotificationItemShape from './NotificationItemShape.js'
 
-class Notifications extends React.Component {
+class Notifications extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.markAsRead = this.markAsRead.bind(this);
   }
 
-  markAsRead(id) {
-    console.log(`Notification ${id} has been masked as read`);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return (
-			nextProps.length > this.props.listNotifications.length ||
-			nextProps.displayDrawer !== this.props.displayDrawer
-		);
-  }
   render() {
-    const { displayDrawer, listNotifications, handleDisplayDrawer, handleHideDrawer} = this.props;
+    const { displayDrawer, listNotifications, handleDisplayDrawer, handleHideDrawer, markNotificationAsRead} = this.props;
 
     return (
       <>
@@ -47,7 +36,7 @@ class Notifications extends React.Component {
               <p>Here is the list of notifications</p>
                 <ul className={css(styles.ul)}>
                   {listNotifications.map(({id, value, type, html}) => (
-                  <NotificationItem markAsRead={this.markAsRead} key={id} id ={id} value={value} type={type} html={html}/>
+                  <NotificationItem markAsRead={markNotificationAsRead} key={id} id ={id} value={value} type={type} html={html}/>
                   ))}
                 </ul>
             </>
