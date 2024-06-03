@@ -4,11 +4,11 @@ export default function printBestStudents(object) {
   const bestStudents = Seq(object)
     .filter(student => student.score > 70)
     .map(student => {
-      capitalize(student.firstName);
-      capitalize(student.lastName);
+      student.firstName = capitalize(student.firstName);
+      student.lastName = capitalize(student.lastName);
     });
 
-  console.log(bestStudents)
+  console.log(bestStudents.toObject());
 }
 
 const capitalize = (str) => {
