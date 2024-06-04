@@ -7,7 +7,7 @@ import {
  } from "../actions/uiActionTypes";
  import { Map } from 'immutable'
 
-const initialState = Map({
+export const initialState = Map({
   isNotificationDrawerVisible: false,
   isUserLoggedIn: false,
   user: {}
