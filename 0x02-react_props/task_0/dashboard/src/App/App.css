@@ -1,0 +1,11 @@
+*, *::before, *::after {
+  box-sizing: content-box;
+}
+
+:root {
+  --primary-color: #e0354b;
+}
+html {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
