@@ -16,7 +16,7 @@ class App extends React.Component {
     this.handleLogOut = this.handleLogOut.bind(this);
     this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
     this.handleHideDrawer = this.handleHideDrawer.bind(this);
-    this.state = { displayDrawer: false };
+    this.state = {displayDrawer: false};
   }
 
   handleLogOut(event) {
@@ -27,11 +27,11 @@ class App extends React.Component {
   }
 
   handleDisplayDrawer() {
-    this.setState({ displayDrawer: true });
+    this.setState({displayDrawer: true});
   }
 
   handleHideDrawer() {
-    this.setState({ displayDrawer: false });
+    this.setState({displayDrawer: false});
   }
 
   componentDidMount() {
