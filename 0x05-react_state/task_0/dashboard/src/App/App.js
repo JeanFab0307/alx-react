@@ -1,125 +1,122 @@
 import React from 'react';
-import { StyleSheetTestUtils } from 'aphrodite';
-import App from './App';
-import Notifications from '../Notifications/Notifications';
+import Proptypes from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
+import Header from '../Header/Header';
 import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
-import Header from '../Header/Header';
+import Notifications from '../Notifications/Notifications';
 import CourseList from '../CourseList/CourseList';
-import { shallow, mount } from 'enzyme';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
+import BodySection from '../BodySection/BodySection';
+import { getLatestNotification } from '../utils/utils';
 
-beforeEach(() => {
-	StyleSheetTestUtils.suppressStyleInjection();
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleLogOut = this.handleLogOut.bind(this);
+    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
+    this.handleHideDrawer = this.handleHideDrawer.bind(this);
+    this.state = {displayDrawer: false};
+  }
+
+  handleLogOut(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'h') {
+      alert('Logging you out');
+      this.logOut;
+    }
+  }
+
+  handleDisplayDrawer() {
+    this.setState({displayDrawer: true});
+  }
+
+  handleHideDrawer() {
+    this.setState({displayDrawer: false});
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleLogOut);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleLogOut);
+  }
+
+  render() {
+    const listCourses = [
+      {id: 1, name: 'ES6', credit: 60},
+      {id: 2, name: 'Webpack', credit: 20},
+      {id: 3, name: 'React', credit: 40}
+    ];
+    const listNotifications = [
+      { id: 1, type: 'default', value: 'New course available' },
+      { id: 2, type: 'urgent', value: 'New resume available' },
+      { id: 3, type: 'urgent', html: getLatestNotification() }
+    ];
+    const {isLoggedIn, logOut} = this.props;
+    return (
+      <>
+      <div className={css(styles.App)}>
+        <div className="HeaderSection">
+          <Notifications
+          listNotifications={listNotifications}
+          displayDrawer={this.state.displayDrawer}
+          handleDisplayDrawer={this.handleDisplayDrawer}
+          handleHideDrawer={this.handleHideDrawer}/>
+          <Header />
+        </div>
+        <div className={css(styles.appBody)}>
+          {isLoggedIn ?
+          (
+            <BodySectionWithMarginBottom title='CourseList'>
+              <CourseList listCourses={listCourses} />
+            </BodySectionWithMarginBottom>
+          ) :
+          (
+            <BodySectionWithMarginBottom title='Log in to continue'>
+              <Login />
+            </BodySectionWithMarginBottom>
+          )}
+          <BodySection title='News from the School'>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+							Perspiciatis at tempora odio, necessitatibus repudiandae
+							reiciendis cum nemo sed asperiores ut molestiae eaque aliquam illo
+							ipsa iste vero dolor voluptates.
+            </p>
+          </BodySection>
+        </div>
+        <Footer />
+      </div>
+    </>
+  );
+}
+}
+
+App.proptypes = {
+  isLoggedIn: Proptypes.bool,
+  logOut: Proptypes.func
+};
+
+App.defaultProps = {
+  isLoggedIn: false,
+  logOut: () => {return;}
+};
+
+// Styles
+const styles = StyleSheet.create({
+  App: {
+    position: "relative",
+    height: "100vh",
+    maxwidth: "100vw",
+    fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+    boxSizing: "content-box",
+    margin: 0,
+  },
+  appBody: {
+    margin: "10px 25px",
+    textAlign: "justify"
+  }
 });
 
-afterEach(() => {
-	StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});
-
-describe('rendering components', () => {
-	it('renders App component without crashing', () => {
-		const wrapper = shallow(<App />);
-
-		expect(wrapper.exists()).toBe(true);
-	});
-
-	it('App contains Notifications component', () => {
-		const wrapper = shallow(<App />);
-
-		expect(wrapper.find(Notifications)).toHaveLength(1);
-	});
-
-	it('App contains Header component', () => {
-		const wrapper = shallow(<App />);
-
-		expect(wrapper.contains(<Header />)).toBe(true);
-	});
-
-	it('App contains Login component', () => {
-		const wrapper = shallow(<App />);
-
-		expect(wrapper.contains(<Login />)).toBe(true);
-	});
-
-	it('App contains Footer component', () => {
-		const wrapper = shallow(<App />);
-
-		expect(wrapper.contains(<Footer />)).toBe(true);
-	});
-
-	it('checks CourseList is not rendered', () => {
-		const wrapper = shallow(<App />);
-
-		expect(wrapper.contains(<CourseList />)).toBe(false);
-	});
-});
-
-describe('when isLogged in is true', () => {
-	const wrapper = shallow(<App isLoggedIn={true} />);
-
-	it('checks Login is not rendered', () => {
-		expect(wrapper.contains(<Login />)).toBe(false);
-	});
-
-	it('checks CourseList is rendered', () => {
-		expect(wrapper.find(CourseList)).toHaveLength(1);
-	});
-});
-
-describe('when Ctrl+h pressed', () => {
-	it('checks logOut function is called', () => {
-		const mockFn = jest.fn();
-		const wrapper = mount(<App logOut={mockFn} />);
-		const event = new KeyboardEvent('keydown', { ctrlKey: true, key: 'h' });
-
-		document.dispatchEvent(event);
-		expect(mockFn).toHaveBeenCalled();
-		wrapper.unmount();
-	});
-
-	window.alert = jest.fn();
-	it('checks alert function is called', () => {
-		const wrapper = mount(<App />);
-		const spy = jest.spyOn(window, 'alert');
-		const event = new KeyboardEvent('keydown', { ctrlKey: true, key: 'h' });
-		document.dispatchEvent(event);
-
-		expect(spy).toHaveBeenCalled();
-		spy.mockRestore();
-		wrapper.unmount();
-	});
-
-	it('checks alert string is "Logging you out"', () => {
-		const wrapper = mount(<App />);
-		const spy = jest.spyOn(window, 'alert');
-		const event = new KeyboardEvent('keydown', { ctrlKey: true, key: 'h' });
-		document.dispatchEvent(event);
-
-		expect(spy).toHaveBeenCalledWith('Logging you out');
-		jest.restoreAllMocks();
-		wrapper.unmount();
-	});
-	window.alert.mockClear();
-});
-
-describe('testing state of App.js', () => {
-	it('displayDrawer initial value should be set to false', () => {
-		const wrapper = mount(<App />);
-
-		expect(wrapper.state().displayDrawer).toBe(false);
-	});
-
-	it('should set displayDrawer to true after calling handleDisplayDrawer', () => {
-		const wrapper = shallow(<App />);
-		wrapper.instance().handleDisplayDrawer();
-
-		expect(wrapper.state().displayDrawer).toBe(true);
-	});
-
-	it('should set displayDrawer to false after calling handleHideDrawer', () => {
-		const wrapper = shallow(<App />);
-		wrapper.instance().handleHideDrawer();
-
-		expect(wrapper.state().displayDrawer).toBe(false);
-	});
-});
+export default App;
